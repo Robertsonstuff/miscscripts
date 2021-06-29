@@ -1,4 +1,4 @@
-#needs computer name input and spits out: computername, last logon date and username
+	#needs computer name input and spits out: computername, last logon date and username
   [cmdletBinding()]
 param(
 	[Parameter(Mandatory=$True)]
@@ -9,11 +9,11 @@ param(
 Get-ADComputer -Identity "$ComputerName" -Properties lastLogonDate, extensionAttribute10 | Select SAMAccountName, lastLogonDate, extensionAttribute10
 
 
-# tells you what OS update your are on. enter-pssession then run below. This acts like a 'winver'.
+	# tells you what OS update your are on. enter-pssession then run below. This acts like a 'winver'.
 (Get-WmiObject -class Win32_OperatingSystem).Caption +" "+ (Get-WmiObject -class Win32_OperatingSystem).Version + "." + (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name UBR).UBR + " "+ (Get-WmiObject -Class Win32_ComputerSystem).SystemType + " (" + (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").ReleaseId + ")"
 
 
-#this checks how a laptop built in 1809 with heat, bitlocker and snapdragon drivers.
+	#this checks how a laptop built in 1809 with heat, bitlocker and snapdragon drivers.
 
 #Create text file in the location below C:\path\textfile.txt
 
@@ -73,5 +73,78 @@ forEach ($computers in $Computers101) {
 
 }
 
-#fetches a website
+	#fetches a website
 start-process "https://www.google.com/"
+
+	# battery info
+Get-wmiobject -class win32_battery
+
+	# bios info
+Get-wmiobject -class win32_bios
+
+	# Tells you if bitlocker has ecrypted and percentage
+bitlockervolume
+
+	# suspend bitlocker for two reboots 
+Suspend-bitlocker -mountpoint c: -rebootcount 2
+
+	# encrypts bitlocker
+manage-bde -on C: 
+
+restart-computer -force
+
+	# shutdown and restart computer in 120 seconds with "…" message.
+shutdown /r /t 120 /c "This is a test on computer" 
+
+	# Opening a file in notepad
+notepad $a
+
+copy-item -path file.py -Destination file2.py
+
+rename-item -path C:\Scripts\blah -newname ChristmasForm.py
+
+    # remote to a computer
+enter-pssession -computername blah
+Exit-pssession 
+
+    # checks multiple computers for RAM and processor info
+    # the comments show you a different way to write it.
+$Computers101 = Get-Content C:\Path\list.txt
+
+$cap = get-wmiobject -class win32_physicalmemory
+
+$getcompinfo = Get-ComputerInfo
+
+
+forEach ($computers in $Computers101)
+{
+  Write-Output "`r`nChecking CPU specs:`r`n"
+  $cap = Get-WmiObject -Class win32_PhysicalMemory -ComputerName $computers
+  Write-Host "$($getcomputerinfo.name)"
+ # Invoke-Command -ComputerName $Computers -ScriptBlock {write-host $getcompinfo.CsProcessors.name}
+  Write-Output "`r`nChecking RAM specs:`r`n"
+  $getcomputerinfo = Get-WmiObject -Class Win32_Processor -ComputerName $computers
+  write-host "$($cap.capacity / 1GB)"
+
+ # Invoke-Command -ComputerName $Computers -ScriptBlock {write-host ($cap.capacity/ 1GB)}
+ # if (Test-Connection -ComputerName $computers -Count 1)
+ # {
+ # $cap = Get-WmiObject -Class win32_PhysicalMemory -ComputerName $computers
+ # Write-Host "Physical Memory: $($cap.Capacity / 1GB)"
+
+ # $getcomputerinfo = Get-WmiObject -Class Win32_Processor -ComputerName $computers
+ # Write-Host "CPU: $($getcomputerinfo.name)"
+
+ # }
+ # else
+ # {
+ # Write-Warning "Unable to connect to computer"
+ # }
+}
+
+
+
+
+
+
+
