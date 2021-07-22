@@ -106,7 +106,8 @@ rename-item -path C:\Scripts\blah -newname ChristmasForm.py
     # remote to a computer
 enter-pssession -computername blah
 Exit-pssession 
-
+    # checks current computer for RAM - one line
+$physicalram = (Get-WMIObject -class Win32_PhysicalMemory -ComputerName blah | Measure-Object -Property capacity -Sum | % {[Math]::Round(($_.sum / 1GB),2)})
     # checks multiple computers for RAM and processor info
     # the comments show you a different way to write it.
 $Computers101 = Get-Content C:\Path\list.txt
