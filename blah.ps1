@@ -103,6 +103,10 @@ copy-item -path file.py -Destination file2.py
 
 rename-item -path C:\Scripts\blah -newname ChristmasForm.py
 
+	# get computer name
+	$a = get-computerinfo
+	$a.csname
+
     # remote to a computer
 enter-pssession -computername blah
 Exit-pssession 
