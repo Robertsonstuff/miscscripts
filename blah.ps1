@@ -1,4 +1,4 @@
-	#needs computer name input and spits out: computername, last logon date and username
+#needs computer name input and spits out: computername, last logon date and username
   [cmdletBinding()]
 param(
 	[Parameter(Mandatory=$True)]
@@ -110,6 +110,22 @@ rename-item -path C:\Scripts\blah -newname ChristmasForm.py
     # remote to a computer
 enter-pssession -computername blah
 Exit-pssession 
+
+#set parameters for a script. Run script then type '-' to indicate the parameter
+Param (
+    [Parameter()]
+    [String]$parameter1,
+
+    [Parameter()]
+    [String]$parameter2
+)
+write-output "write this out and add $parameter1"
+write-output "and after that, I would like to add $parameter2"
+
+
+
+write-output "I'd like this specific text in my clipboard." | Set-clipboard
+
     # checks current computer for RAM - one line
 $physicalram = (Get-WMIObject -class Win32_PhysicalMemory -ComputerName blah | Measure-Object -Property capacity -Sum | % {[Math]::Round(($_.sum / 1GB),2)})
     # checks multiple computers for RAM and processor info
