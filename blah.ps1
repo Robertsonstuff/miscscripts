@@ -700,6 +700,54 @@ $folderForm.ShowDialog()
 
 $folderForm.ShowDialog()
 
+# calendar access in exchange
+$a = read-host mailbox email ?
+$b = read-host userID needing access? 
+$c = read-host editor or reviewer?
+$UserCredential = Get-Credential
+read-host are you logged in?
+$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri http://blah -Authentication Kerberos -Credential $UserCredential
+Start-Sleep -s 2
+Import-PSSession $Session -DisableNameChecking
+Start-Sleep -s 2
+$e = (("Add-MailboxFolderPermission $a") + (":\Calendar -User $b -AccessRights $c"))
+write-output $e | set-clipboard
+write-host "`r`nYour script has been saved to your clipboard. Paste and run`r`n"
 
+#os checker
+$a = read-host computer name?
+start-sleep -s 2
+invoke-command -ComputerName "$a" -ScriptBlock {(Get-WmiObject -class Win32_OperatingSystem).Caption +" "+ (Get-WmiObject -class Win32_OperatingSystem).Version + "." + (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name UBR).UBR + " "+ (Get-WmiObject -Class Win32_ComputerSystem).SystemType + " (" + (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").ReleaseId + ")"}
 
+#group policy update
+$a = read-host computer name?
+start-sleep -s 2
+invoke-command -ComputerName "$a" -ScriptBlock {gpupdate /force}
 
+#stress test
+$NumberOfLogicalProcessors = Get-WmiObject win32_processor | Select-Object -ExpandProperty NumberOfLogicalProcessors
+
+ForEach ($core in 1..$numberOfLogicalProcessors){
+
+start-job -ScriptBlock{
+
+    $result = 1;
+    foreach ($loopnumber in 1..2147483647){
+        $result=1;
+
+        foreach ($loopnumber1 in 1..2147483647){
+        $result=1;
+            
+            foreach($number in 1..2147483647){
+                $result = $result * $number
+	    }
+	}
+
+	    $result
+	}
+    }
+}
+
+Read-Host "Press any key to exit..."
+Stop-Job *
+}
