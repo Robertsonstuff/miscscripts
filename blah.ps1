@@ -163,6 +163,36 @@ forEach ($computers in $Computers101)
  # }
 }
 
+# reading and reporting data from a excel spreadsheet
+
+$excel = New-Object -Com Excel.Application
+$wb = $excel.Workbooks.Open("C:\Users\lrobertson\Desktop\local-dispatch.xlsx")
+
+$wb.sheets.item(1).activate()
+$WbTotal=$wb.Worksheets.item(1)
+#$Value = $wbTotal.Cells.Item(13,7)
+#$Value.Text
+#This will return 110. It searches 13 cells down first and then 7 cells to the right
+
+$SearchString = read-host "company name please"
+
+$Range = $WbTotal.Range("A1").EntireColumn
+$Search = $Range.find($SearchString)
+$Range2 = $WbTotal.Range("A1").EntireColumn
+$Search2 = $Range2.find("Company")
+
+#$Search2.EntireRow.Value2
+$Search3 = $Search2.EntireRow.Value2
+#$Search[1,4]
+
+#$Search.EntireRow.Value2
+
+$Search1 = $Search.EntireRow.Value2
+
+For ($i = 4; $i -lt 17; $i++) {
+    write-host "$($Search1[1,$($i)]) minutes for: $($Search3[1,$($i)])"
+}
+
 #Form1
 #Version 1.4
     [reflection.assembly]::LoadwithPartialName("System.windows.Forms") | Out-Null
