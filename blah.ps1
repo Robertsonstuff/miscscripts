@@ -162,6 +162,39 @@ forEach ($computers in $Computers101)
  # Write-Warning "Unable to connect to computer"
  # }
 }
+  # mouse clicks!!!
+[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") 
+[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") 
+
+$signature=@'
+[DllImport("user32.dll",CharSet=CharSet.Auto,CallingConvention=CallingConvention.StdCall)]
+public static extern void mouse_event(long dwFlags, long dx, long dy, long cButtons, long dwExtraInfo);
+'@
+
+$SendMouseClick = Add-Type -memberDefinition $signature -name "Win32MouseEventNew" -namespace Win32Functions -passThru
+
+$x = 2443
+$y = 30
+[System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($x, $y)
+sleep -Seconds 01
+$SendMouseClick::mouse_event(0x00000002, 0, 0, 0, 0);
+$SendMouseClick::mouse_event(0x00000004, 0, 0, 0, 0);
+$x = 2157
+$y = 450
+[System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($x, $y)
+sleep -Seconds 01
+$SendMouseClick::mouse_event(0x00000002, 0, 0, 0, 0);
+$SendMouseClick::mouse_event(0x00000004, 0, 0, 0, 0);
+
+  # find positions with below
+Add-Type -AssemblyName System.Windows.Forms
+ 
+$X = [System.Windows.Forms.Cursor]::Position.X
+$Y = [System.Windows.Forms.Cursor]::Position.Y
+ 
+Write-Output "X: $X | Y: $Y"
+
+
 
 # reading and reporting data from a excel spreadsheet
 
